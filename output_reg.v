@@ -9,7 +9,7 @@ module output_reg (
 	
 	reg [7:0] data = 8'b0;
 	
-	always @(posedge clock or posedge clear) begin //isso aqui talvez de errado. tenho que ver esses posedge
+	always @(posedge clock or posedge clear) begin 
 		if(clear) data <= 8'b00000000;
 		else if(opr_in) data <= bus_in;
 	end
