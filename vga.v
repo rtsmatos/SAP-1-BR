@@ -141,7 +141,7 @@ module vga (
     wire b_ctrl = ((pixel_x == CTRL_X0 || pixel_x == CTRL_X1) && (pixel_y >= CTRL_Y0 && pixel_y <= CTRL_Y1)) || 
                   ((pixel_y == CTRL_Y0 || pixel_y == CTRL_Y1) && (pixel_x >= CTRL_X0 && pixel_x <= CTRL_X1));
             
-    // Flags de Atividade dos Módulos (Para colorir a borda)
+    // Sinais para detectar atividade dos Módulos (Para colorir a borda)
     wire active_pc   = sig_pc_out | sig_pc_inc | sig_jmp;
     wire active_mar  = sig_mar_in;
     wire active_ram  = sig_ram_in | sig_ram_out;
@@ -160,14 +160,14 @@ module vga (
 	 
 	 assign border_is_active = 
 	 (b_pc   && active_pc)  | (b_mar  && active_mar) | 
-    (b_ram  && active_ram) | (b_ir   && active_ir)  | 
-    (b_acc  && active_acc) | (b_alu  && active_alu) | 
-    (b_breg && active_b)   | (b_out  && active_out) | 
-    (b_bus  && active_bus);
+     (b_ram  && active_ram) | (b_ir   && active_ir)  | 
+     (b_acc  && active_acc) | (b_alu  && active_alu) | 
+     (b_breg && active_b)   | (b_out  && active_out) | 
+     (b_bus  && active_bus);
 
 	 always @(*) begin
 		{red_border, green_border, blue_border} = border_is_active ? {4'hF, 4'h0, 4'h0}
-																					  : {4'hF, 4'hF, 4'hF};
+																   : {4'hF, 4'hF, 4'hF};
 	 end
 		 
 
@@ -238,16 +238,16 @@ module vga (
     wire arrow_is_active;
 
 	assign arrow_is_active = 
-   (ar_pc_bus && sig_pc_out) |
+    (ar_pc_bus && sig_pc_out) |
 	(ar_bus_pc && sig_jmp)    |
 	(ar_ir_bus && sig_ir_out) |
-   (ar_bus_ir && sig_ir_in)  |
-   (ar_ir_control && sig_ir_in) |
+    (ar_bus_ir && sig_ir_in)  |
+    (ar_ir_control && sig_ir_in) |
 	(ar_acc_bus && sig_acc_out) |
 	(ar_bus_acc && sig_acc_in) |
 	(ar_alu_bus && sig_alu_out) |
 	(ar_bus_mar && sig_mar_in) |
-   (ar_ram_bus && sig_ram_out) |
+    (ar_ram_bus && sig_ram_out) |
 	(ar_bus_ram && sig_ram_in) |
 	(ar_bus_breg && sig_br_in) |
 	(ar_bus_outreg && sig_opr_in);
@@ -258,11 +258,9 @@ module vga (
     // ============================================================
     // CONVERSÃO DE DADOS
     // ============================================================
-    
   
     wire [31:0] pc_ascii, mar_ascii;
     wire [63:0] ir_ascii, acc_ascii, alu_ascii, breg_ascii, output_reg_ascii;
-
  
     bin_to_ascii #(.N(4)) c_pc  (.binary_in(pc_bin),   .ascii_out(pc_ascii));
     bin_to_ascii #(.N(4)) c_mar (.binary_in(mar_bin),  .ascii_out(mar_ascii));
@@ -333,13 +331,13 @@ module vga (
         text_x[10] = 150; text_y[10] = 217; text_len[10] = 4; text_data[10] = "DATA";
         
         // Conteudos dinamicos ja convertidos para ASCII
-        text_x[11] = 68;  text_y[11] = 66;  text_len[11] = 4; text_data[11] = { {(20-4){8'h20}}, pc_ascii};
-        text_x[12] = 68;  text_y[12] = 153; text_len[12] = 4; text_data[12] = { {(20-4){8'h20}}, mar_ascii};
-        text_x[13] = 68;  text_y[13] = 433; text_len[13] = 8; text_data[13] = { {(20-8){8'h20}}, ir_ascii};
-        text_x[14] = 415; text_y[14] = 66;  text_len[14] = 8; text_data[14] = { {(20-8){8'h20}}, acc_ascii};
-        text_x[15] = 415; text_y[15] = 153; text_len[15] = 8; text_data[15] = { {(20-8){8'h20}}, alu_ascii};
-        text_x[16] = 415; text_y[16] = 239; text_len[16] = 8; text_data[16] = { {(20-8){8'h20}}, breg_ascii};
-        text_x[17] = 415; text_y[17] = 325; text_len[17] = 8; text_data[17] = { {(20-8){8'h20}}, output_reg_ascii};
+        text_x[11] = 68;  text_y[11] = 66;  text_len[11] = 4; text_data[11] = pc_ascii;
+        text_x[12] = 68;  text_y[12] = 153; text_len[12] = 4; text_data[12] = mar_ascii;
+        text_x[13] = 68;  text_y[13] = 433; text_len[13] = 8; text_data[13] = ir_ascii};
+        text_x[14] = 415; text_y[14] = 66;  text_len[14] = 8; text_data[14] = acc_ascii};
+        text_x[15] = 415; text_y[15] = 153; text_len[15] = 8; text_data[15] = alu_ascii};
+        text_x[16] = 415; text_y[16] = 239; text_len[16] = 8; text_data[16] = breg_ascii};
+		text_x[17] = 415; text_y[17] = 325; text_len[17] = 8; text_data[17] = output_reg_ascii};
           
           
         //Enderecos da RAM. FONTE 8x8
@@ -402,12 +400,12 @@ module vga (
                     row_8x16   = (pixel_y - text_y[i]) % 16;
                     char_code_8x16  = text_data[i][8*(text_len[i]-1-char_index) +: 8];
                     
-						  if (font_data_8x16[7-bit_index]) pixel_on_text = 1;
+					if (font_data_8x16[7-bit_index]) pixel_on_text = 1;
                     active_text_index = i;
                 end
             end
 
-            // 2. Textos 8x8 Labels e Endereços (IGUAL)
+            // 2. Textos 8x8
             for (i = NUM_TEXTS_8x16; i < NUM_TEXTS; i = i + 1) begin
                 if (!pixel_on_text &&
                     pixel_x >= text_x[i] && pixel_x < text_x[i] + 8 * text_len[i] &&
@@ -418,7 +416,7 @@ module vga (
                     row_8x8    = (pixel_y - text_y[i]) % 8;
                     char_code_8x8 = text_data[i][8*(text_len[i]-1-char_index) +: 8];
                     
-						  if (font_data_8x8[7-bit_index]) pixel_on_text = 1;
+					if (font_data_8x8[7-bit_index]) pixel_on_text = 1;
                     active_text_index = i;
                 end
             end
