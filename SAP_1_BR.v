@@ -1,6 +1,6 @@
 module SAP_1_BR (
-	input manual_auto, //isso vai ser um switch que permite escolher entre clock manual ou automatico
-	input button_clock_manual, //isso vai ser um push button
+	input manual_auto, //switch que permite escolher entre clock manual ou automatico
+	input button_clock_manual, //mapeado para um push button
 	input [3:0] prog_address, //chaves do fpga.
 	input [7:0] prog_data, //chaves da placa
 	input clock_auto, //MAX10_CLK1_50 (PIN_P11)
@@ -36,9 +36,9 @@ module SAP_1_BR (
 	wire [7:0] bus_ir;
 	wire [7:0] bus_acc;
 	wire [7:0] bus_alu;
-	wire [7:0] bus_ram; //vetor com todo o conteudo da RAM: 16 endereços com 8 bits
+	wire [7:0] bus_ram;
 	
-	// Wires BINÁRIOS para o VGA (Sem ASCII aqui!)
+	// Wires com binarios para o VGA
     wire [3:0] pc_to_vga;
     wire [3:0] mar_to_vga;
     wire [7:0] ir_to_vga;
@@ -48,27 +48,25 @@ module SAP_1_BR (
     wire [7:0] outputreg_to_vga;
 	 wire [4:0] vga_ring_counter;
     wire [127:0] ram_to_vga; // 16 endereços * 8 bits = 128 bits crus
-	 
-	
-	
+	 	
 	//o barramento vai receber o conteudo apenas do modulo que estiver com a saida habilitada
 	assign bus = sig_pc_out ? {4'b0000, bus_pc[3:0]} :
-					 sig_acc_out ? bus_acc :
-					 sig_alu_out ? bus_alu :
-					 sig_ir_out ? {4'b0000, bus_ir[3:0]} :
-					 sig_ram_out ? bus_ram :
-					 8'b00000000;
+				 sig_acc_out ? bus_acc :
+				 sig_alu_out ? bus_alu :
+				 sig_ir_out ? {4'b0000, bus_ir[3:0]} :
+				 sig_ram_out ? bus_ram :
+				 8'b00000000;
 	
-	wire clock; //esse eh ligado em todos os modulos
-	wire clear = ~button_clear; //os botoes do fpga sao nivel alto quando SOLTOS. Quero 1 quando eu pressiona-lo
+	wire clock; //sinal de clock distribuido para os modulos
+	wire clear = ~button_clear; //Invertidos porque os botoes do fpga sao nivel alto quando SOLTOS. Quero 1 quando eu pressiona-lo
 
 		
 	clock_circuit clock_circuit (
-	.clock_auto (clock_auto),
-   .manual_auto (manual_auto),
-   .button_clock_manual (~button_clock_manual), //o botao eh normalmente 1 quando solto. eu quero 1 quando pressionar   
-   .hlt (sig_hlt),
-   .clock (clock)
+   		.clock_auto (clock_auto),
+   		.manual_auto (manual_auto),
+		.button_clock_manual (~button_clock_manual), //no DE10-Lite, os botoes são nivel alto quando soltos. Quero o contrario  
+   		.hlt (sig_hlt),
+   		.clock (clock)
 	);
 	
 	program_counter program_counter (
@@ -184,9 +182,9 @@ module SAP_1_BR (
 	);
 	
 	vga vga (
-        .clk_50mhz (clock_auto),  
+		.clk_50mhz (clock_auto), //clock de 50MHz do FPGA
         .reset (clear), 
-		  .ring_counter (vga_ring_counter),
+		.ring_counter (vga_ring_counter),
          
         // Entradas Binárias
         .pc_bin   (pc_to_vga),
@@ -207,10 +205,10 @@ module SAP_1_BR (
         
         // Saídas VGA
         .hsync (hsync), 
-		  .vsync (vsync),
+		.vsync (vsync),
         .red (red), 
-		  .green (green), 
-		  .blue (blue)  
+		.green (green), 
+		.blue (blue)  
     );
 		
 		
