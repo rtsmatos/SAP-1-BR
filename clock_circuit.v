@@ -8,6 +8,6 @@ module clock_circuit (
 
     assign clock =
         (hlt)              ? 1'b0 :    // se halt, sem clock
-        (manual_auto)      ? clock_auto: // modo auto
+        (manual_auto)      ? clock_auto: // se manual_auto = 1, clock auto
                              button_clock_manual; // manual: pulso ao apertar
 endmodule 
