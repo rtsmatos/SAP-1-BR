@@ -17,11 +17,11 @@ module control (
 					
     reg [4:0] ring_counter = T0;
 	 
-    always @(negedge clock or posedge clear) begin
+	always @(posedge clock or posedge clear) begin
 	 
         if (clear) begin
             ring_counter <= T0;
-				vga_ring_counter <= T0;
+			vga_ring_counter <= T0;
             
             {pc_inc, jmp, pc_out, acc_in, acc_out, mar_in, alu_out, add_sub, 
              alu0_and, alu1_or, xor_not, ram_in, ram_out, br_in, ir_in, 
@@ -33,7 +33,7 @@ module control (
              alu0_and, alu1_or, xor_not, ram_in, ram_out, br_in, ir_in, 
              ir_out, opr_in, hlt_sig} <= 18'b0;
 				 
-				vga_ring_counter = ring_counter;
+			vga_ring_counter <= ring_counter;
 
            
             case (ring_counter)
