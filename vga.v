@@ -333,11 +333,11 @@ module vga (
         // Conteudos dinamicos ja convertidos para ASCII
         text_x[11] = 68;  text_y[11] = 66;  text_len[11] = 4; text_data[11] = pc_ascii;
         text_x[12] = 68;  text_y[12] = 153; text_len[12] = 4; text_data[12] = mar_ascii;
-        text_x[13] = 68;  text_y[13] = 433; text_len[13] = 8; text_data[13] = ir_ascii};
-        text_x[14] = 415; text_y[14] = 66;  text_len[14] = 8; text_data[14] = acc_ascii};
-        text_x[15] = 415; text_y[15] = 153; text_len[15] = 8; text_data[15] = alu_ascii};
-        text_x[16] = 415; text_y[16] = 239; text_len[16] = 8; text_data[16] = breg_ascii};
-		text_x[17] = 415; text_y[17] = 325; text_len[17] = 8; text_data[17] = output_reg_ascii};
+        text_x[13] = 68;  text_y[13] = 433; text_len[13] = 8; text_data[13] = ir_ascii;
+        text_x[14] = 415; text_y[14] = 66;  text_len[14] = 8; text_data[14] = acc_ascii;
+        text_x[15] = 415; text_y[15] = 153; text_len[15] = 8; text_data[15] = alu_ascii;
+        text_x[16] = 415; text_y[16] = 239; text_len[16] = 8; text_data[16] = breg_ascii;
+		text_x[17] = 415; text_y[17] = 325; text_len[17] = 8; text_data[17] = output_reg_ascii;
           
           
         //Enderecos da RAM. FONTE 8x8
